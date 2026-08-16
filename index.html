@@ -1,560 +1,982 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>For You ❤️</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+<title>For You ❤️</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Georgia,"Times New Roman",serif;
+    background:#070509;
+    color:white;
+}
+
+body{
+    position:relative;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.background{
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(255,80,130,.16),transparent 30%),
+        radial-gradient(circle at 80% 80%,rgba(150,60,120,.14),transparent 30%),
+        linear-gradient(135deg,#080509,#130810,#080509);
+    z-index:-3;
+}
+
+.blur{
+    position:absolute;
+    width:350px;
+    height:350px;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.3;
+}
+
+.blur.one{
+    background:#ff477e;
+    top:-150px;
+    left:-150px;
+}
+
+.blur.two{
+    background:#8e3d9d;
+    bottom:-150px;
+    right:-150px;
+}
+
+/* =========================
+   HEART PARTICLES
+========================= */
+
+.particles{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:1;
+}
+
+.particle{
+    position:absolute;
+    opacity:.16;
+    animation:float 9s infinite ease-in-out;
+}
+
+.particle:nth-child(1){left:8%;top:20%;font-size:18px;}
+.particle:nth-child(2){left:82%;top:15%;font-size:25px;animation-delay:2s;}
+.particle:nth-child(3){left:15%;bottom:18%;font-size:22px;animation-delay:4s;}
+.particle:nth-child(4){right:12%;bottom:25%;font-size:17px;animation-delay:1s;}
+.particle:nth-child(5){left:50%;top:8%;font-size:15px;animation-delay:3s;}
+
+@keyframes float{
+    0%,100%{
+        transform:translateY(0) rotate(0);
+    }
+    50%{
+        transform:translateY(-30px) rotate(10deg);
+    }
+}
+
+/* =========================
+   COMMON SCREEN
+========================= */
+
+.screen{
+    position:absolute;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:25px;
+    text-align:center;
+}
+
+.screen.active{
+    display:flex;
+    animation:screenIn .9s ease forwards;
+}
+
+@keyframes screenIn{
+    from{
+        opacity:0;
+        transform:scale(.97) translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:scale(1) translateY(0);
+    }
+}
+
+.content{
+    width:100%;
+    max-width:720px;
+    position:relative;
+    z-index:3;
+}
+
+/* =========================
+   TEXT
+========================= */
+
+.eyebrow{
+    text-transform:uppercase;
+    letter-spacing:4px;
+    font-size:12px;
+    color:rgba(255,255,255,.55);
+    margin-bottom:20px;
+}
+
+h1{
+    font-size:clamp(45px,11vw,85px);
+    line-height:1.02;
+    font-weight:400;
+    margin-bottom:22px;
+}
+
+h2{
+    font-size:clamp(30px,7vw,54px);
+    line-height:1.1;
+    font-weight:400;
+    margin-bottom:16px;
+}
+
+.accent{
+    color:#ff9eb7;
+}
+
+.description{
+    font-size:17px;
+    line-height:1.8;
+    color:rgba(255,255,255,.78);
+    max-width:600px;
+    margin:auto;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn{
+    margin-top:30px;
+    padding:15px 30px;
+    border-radius:50px;
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.08);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:.35s;
+    backdrop-filter:blur(12px);
+}
+
+.btn:hover{
+    transform:translateY(-4px);
+    background:rgba(255,255,255,.16);
+    border-color:rgba(255,158,183,.6);
+}
+
+.btn:active{
+    transform:scale(.96);
+}
+
+/* =========================
+   START SCREEN
+========================= */
+
+.start-heart{
+    font-size:70px;
+    margin-bottom:20px;
+    animation:heartbeat 1.7s infinite;
+}
+
+@keyframes heartbeat{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.13);}
+}
+
+/* =========================
+   TIMELINE
+========================= */
+
+.timeline{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:28px;
+}
+
+.year{
+    padding:9px 12px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.04);
+    color:rgba(255,255,255,.55);
+    font-size:12px;
+}
+
+.year.active-year{
+    color:#ffb2c5;
+    border-color:rgba(255,158,183,.55);
+    background:rgba(255,100,140,.08);
+}
+
+/* =========================
+   MEMORY
+========================= */
+
+.memory-screen{
+    padding:15px;
+}
+
+.memory-content{
+    width:100%;
+    max-width:600px;
+}
+
+.memory-photo-wrap{
+    width:100%;
+    max-width:430px;
+    height:min(57vh,500px);
+    margin:0 auto 22px;
+    border-radius:24px;
+    overflow:hidden;
+    position:relative;
+    background:#111;
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.6),
+        0 0 40px rgba(255,80,130,.08);
+}
+
+.memory-photo{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    animation:photoReveal 1.2s ease;
+}
+
+@keyframes photoReveal{
+    from{
+        opacity:0;
+        transform:scale(1.08);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+.memory-photo-wrap::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        to bottom,
+        transparent 55%,
+        rgba(0,0,0,.35)
+    );
+    pointer-events:none;
+}
+
+.memory-year{
+    font-size:12px;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    color:#ff9eb7;
+    margin-bottom:8px;
+}
+
+.memory-title{
+    font-size:clamp(27px,6vw,42px);
+    margin-bottom:10px;
+}
+
+.memory-message{
+    font-size:17px;
+    line-height:1.6;
+    color:rgba(255,255,255,.75);
+    font-style:italic;
+}
+
+.memory-count{
+    position:fixed;
+    top:18px;
+    right:20px;
+    font-size:12px;
+    letter-spacing:2px;
+    color:rgba(255,255,255,.5);
+    z-index:10;
+}
+
+/* =========================
+   QUESTION
+========================= */
+
+.question-buttons{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.answer{
+    margin-top:25px;
+    min-height:30px;
+    color:#ffb1c5;
+    font-size:17px;
+    line-height:1.6;
+}
+
+/* =========================
+   FINAL
+========================= */
+
+.final-heart{
+    font-size:85px;
+    animation:heartbeat 1.5s infinite;
+    margin-bottom:15px;
+}
+
+.final-message{
+    margin:22px auto 0;
+    max-width:620px;
+    font-size:18px;
+    line-height:1.9;
+    color:rgba(255,255,255,.82);
+}
+
+.signature{
+    margin-top:28px;
+    color:#ffafc1;
+    font-size:20px;
+    font-style:italic;
+}
+
+.final-photo{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    object-fit:cover;
+    margin:0 auto 20px;
+    border:3px solid rgba(255,158,183,.45);
+    box-shadow:0 0 45px rgba(255,70,120,.25);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+    .screen{
+        padding:18px;
     }
 
-    html, body {
-      width: 100%;
-      min-height: 100%;
-      font-family: Georgia, "Times New Roman", serif;
-      background: #09060b;
-      color: #fff;
-      overflow-x: hidden;
+    .description{
+        font-size:15px;
     }
 
-    body {
-      min-height: 100vh;
+    .memory-photo-wrap{
+        height:52vh;
+        max-height:470px;
     }
 
-    .screen {
-      min-height: 100vh;
-      width: 100%;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 30px 20px;
-      position: relative;
-      overflow: hidden;
+    .memory-message{
+        font-size:15px;
     }
 
-    .screen.active {
-      display: flex;
-      animation: fadeIn 1s ease;
+    .btn{
+        padding:14px 25px;
     }
 
-    .content {
-      width: 100%;
-      max-width: 700px;
-      text-align: center;
-      position: relative;
-      z-index: 2;
+    .timeline{
+        gap:5px;
     }
 
-    .small-text {
-      font-size: 14px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      opacity: 0.65;
-      margin-bottom: 20px;
+    .year{
+        padding:7px 9px;
+        font-size:10px;
     }
-
-    h1 {
-      font-size: clamp(42px, 10vw, 78px);
-      line-height: 1.05;
-      margin-bottom: 20px;
-      font-weight: 400;
-    }
-
-    h2 {
-      font-size: clamp(30px, 7vw, 52px);
-      font-weight: 400;
-      margin-bottom: 18px;
-    }
-
-    p {
-      font-size: 18px;
-      line-height: 1.8;
-      opacity: 0.85;
-    }
-
-    .accent {
-      color: #ff9eb5;
-    }
-
-    .btn {
-      margin-top: 35px;
-      border: 1px solid rgba(255,255,255,0.35);
-      background: rgba(255,255,255,0.08);
-      color: white;
-      padding: 15px 28px;
-      border-radius: 50px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .btn:hover {
-      transform: translateY(-3px);
-      background: rgba(255,255,255,0.16);
-    }
-
-    /* Background glow */
-
-    .glow {
-      position: absolute;
-      width: 350px;
-      height: 350px;
-      border-radius: 50%;
-      background: rgba(255, 70, 120, 0.12);
-      filter: blur(80px);
-      pointer-events: none;
-    }
-
-    .glow.one {
-      top: -120px;
-      left: -120px;
-    }
-
-    .glow.two {
-      bottom: -150px;
-      right: -120px;
-    }
-
-    /* Floating hearts */
-
-    .heart {
-      position: absolute;
-      opacity: 0.18;
-      animation: float 7s infinite ease-in-out;
-      font-size: 24px;
-    }
-
-    .heart:nth-child(1) {
-      left: 10%;
-      top: 20%;
-    }
-
-    .heart:nth-child(2) {
-      right: 12%;
-      top: 30%;
-      animation-delay: 2s;
-    }
-
-    .heart:nth-child(3) {
-      left: 20%;
-      bottom: 15%;
-      animation-delay: 4s;
-    }
-
-    .heart:nth-child(4) {
-      right: 20%;
-      bottom: 20%;
-      animation-delay: 1s;
-    }
-
-    /* Timeline */
-
-    .timeline {
-      margin-top: 35px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-
-    .year {
-      padding: 15px 5px;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 15px;
-      background: rgba(255,255,255,0.04);
-      font-size: 14px;
-    }
-
-    .year.special {
-      border-color: rgba(255,158,181,0.6);
-      color: #ffb4c6;
-    }
-
-    /* Memory */
-
-    .memory-card {
-      margin: 30px auto 0;
-      max-width: 450px;
-      min-height: 230px;
-      border-radius: 25px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: linear-gradient(
-        145deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.025)
-      );
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 30px;
-      backdrop-filter: blur(12px);
-    }
-
-    .photo-placeholder {
-      width: 100%;
-      min-height: 170px;
-      border: 1px dashed rgba(255,255,255,0.25);
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 10px;
-      opacity: 0.7;
-    }
-
-    .photo-placeholder span {
-      font-size: 42px;
-    }
-
-    /* Final */
-
-    .final-heart {
-      font-size: 80px;
-      margin-bottom: 20px;
-      animation: heartbeat 1.5s infinite;
-    }
-
-    .signature {
-      margin-top: 35px;
-      font-size: 20px;
-      font-style: italic;
-      color: #ffb4c6;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(15px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0) rotate(0deg);
-      }
-
-      50% {
-        transform: translateY(-30px) rotate(10deg);
-      }
-    }
-
-    @keyframes heartbeat {
-      0%, 100% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.15);
-      }
-    }
-
-    @media (max-width: 600px) {
-      .timeline {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      p {
-        font-size: 16px;
-      }
-
-      .btn {
-        width: 85%;
-      }
-    }
-  </style>
+}
+</style>
 </head>
+
 
 <body>
 
-  <!-- SCREEN 1 -->
+<div class="background">
+    <div class="blur one"></div>
+    <div class="blur two"></div>
+</div>
 
-  <section class="screen active" id="screen1">
-
-    <div class="glow one"></div>
-    <div class="glow two"></div>
-
-    <div class="heart">♥</div>
-    <div class="heart">♡</div>
-    <div class="heart">♥</div>
-    <div class="heart">♡</div>
-
-    <div class="content">
-
-      <div class="small-text">
-        17 August
-      </div>
-
-      <h1>
-        This isn't<br>
-        <span class="accent">just a birthday wish.</span>
-      </h1>
-
-      <p>
-        I made something for you...
-        but you'll have to discover it yourself.
-      </p>
-
-      <button class="btn" onclick="nextScreen()">
-        Begin our story ❤️
-      </button>
-
-    </div>
-
-  </section>
+<div class="particles">
+    <div class="particle">♡</div>
+    <div class="particle">♥</div>
+    <div class="particle">♡</div>
+    <div class="particle">♥</div>
+    <div class="particle">♡</div>
+</div>
 
 
-  <!-- SCREEN 2 -->
+<!-- =========================
+     INTRO
+========================= -->
 
-  <section class="screen" id="screen2">
-
-    <div class="glow one"></div>
-    <div class="content">
-
-      <div class="small-text">
-        2014 — 2026
-      </div>
-
-      <h2>
-        Twelve years of <span class="accent">us.</span>
-      </h2>
-
-      <p>
-        Somehow, a simple beginning in 2014
-        became one of the most beautiful chapters
-        of my life.
-      </p>
-
-      <div class="timeline">
-
-        <div class="year special">2014 ❤️</div>
-        <div class="year">2015</div>
-        <div class="year">2016</div>
-        <div class="year">2017</div>
-
-        <div class="year">2018</div>
-        <div class="year">2019</div>
-        <div class="year">2020</div>
-        <div class="year">2021</div>
-
-        <div class="year">2022</div>
-        <div class="year">2023</div>
-        <div class="year">2024</div>
-        <div class="year special">2026 ❤️</div>
-
-      </div>
-
-      <button class="btn" onclick="nextScreen()">
-        Keep going →
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- SCREEN 3 -->
-
-  <section class="screen" id="screen3">
-
-    <div class="glow two"></div>
+<section class="screen active" id="intro">
 
     <div class="content">
 
-      <div class="small-text">
-        Memory 01
-      </div>
+        <div class="start-heart">❤️</div>
 
-      <h2>
-        Every story has a beginning...
-      </h2>
-
-      <div class="memory-card">
-
-        <div class="photo-placeholder">
-          <span>📸</span>
-          <div>Your first memory/photo goes here</div>
+        <div class="eyebrow">
+            17 August
         </div>
 
-      </div>
+        <h1>
+            This isn't<br>
+            just a <span class="accent">birthday wish.</span>
+        </h1>
 
-      <p style="margin-top:20px;">
-        One day we'll replace this with a memory
-        that belongs only to us.
-      </p>
+        <p class="description">
+            It's a little journey through a story
+            that started in 2014...
+        </p>
 
-      <button class="btn" onclick="nextScreen()">
-        One more memory →
-      </button>
+        <button class="btn" onclick="startJourney()">
+            Start the journey ❤️
+        </button>
 
     </div>
 
-  </section>
+</section>
 
 
-  <!-- SCREEN 4 -->
+<!-- =========================
+     TIMELINE
+========================= -->
 
-  <section class="screen" id="screen4">
+<section class="screen" id="timelineScreen">
 
     <div class="content">
 
-      <div class="small-text">
-        Almost there...
-      </div>
+        <div class="eyebrow">
+            2014 — 2026
+        </div>
 
-      <h2>
-        Do you know what my favourite thing about you is?
-      </h2>
+        <h2>
+            <span class="accent">12 years</span> of us.
+        </h2>
 
-      <p>
-        Maybe you'll figure it out.
-      </p>
+        <p class="description">
+            Twelve years of memories,
+            conversations, smiles, fights,
+            laughter and moments that somehow
+            became my favourite part of life.
+        </p>
 
-      <button class="btn" onclick="answer('wrong')">
-        Your smile 😌
-      </button>
+        <div class="timeline">
 
-      <button class="btn" onclick="answer('right')">
-        Everything? ❤️
-      </button>
+            <div class="year active-year">2014</div>
+            <div class="year">2015</div>
+            <div class="year">2016</div>
+            <div class="year">2017</div>
+            <div class="year">2018</div>
+            <div class="year">2019</div>
+            <div class="year">2020</div>
+            <div class="year">2021</div>
+            <div class="year">2022</div>
+            <div class="year">2023</div>
+            <div class="year">2024</div>
+            <div class="year active-year">2025</div>
+            <div class="year active-year">2026</div>
 
-      <p id="answerText" style="margin-top:25px;"></p>
+        </div>
+
+        <button class="btn" onclick="showMemory(0)">
+            Let's remember ❤️
+        </button>
 
     </div>
 
-  </section>
+</section>
 
 
-  <!-- SCREEN 5 -->
+<!-- =========================
+     MEMORY SCREEN
+========================= -->
 
-  <section class="screen" id="screen5">
+<section class="screen memory-screen" id="memoryScreen">
 
-    <div class="glow one"></div>
+    <div class="memory-count" id="memoryCount">
+        01 / 12
+    </div>
+
+    <div class="memory-content">
+
+        <div class="memory-photo-wrap">
+
+            <img
+                id="memoryPhoto"
+                class="memory-photo"
+                src=""
+                alt="Our memory"
+            >
+
+        </div>
+
+        <div
+            id="memoryYear"
+            class="memory-year">
+        </div>
+
+        <div
+            id="memoryTitle"
+            class="memory-title">
+        </div>
+
+        <div
+            id="memoryMessage"
+            class="memory-message">
+        </div>
+
+        <button
+            class="btn"
+            onclick="nextMemory()"
+            id="memoryButton">
+            Next memory →
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     QUESTION
+========================= -->
+
+<section class="screen" id="questionScreen">
 
     <div class="content">
 
-      <div class="small-text">
-        One last thing
-      </div>
+        <div class="eyebrow">
+            After all these years...
+        </div>
 
-      <h2>
-        Ready for the final surprise?
-      </h2>
+        <h2>
+            Do you know what my favourite thing about you is?
+        </h2>
 
-      <p>
-        You've made it this far...
-        so I think you deserve to see it.
-      </p>
+        <p class="description">
+            Choose carefully. 😌
+        </p>
 
-      <button class="btn" onclick="nextScreen()">
-        Open it ❤️
-      </button>
+        <div class="question-buttons">
+
+            <button
+                class="btn"
+                onclick="answer('smile')">
+                Your smile 😌
+            </button>
+
+            <button
+                class="btn"
+                onclick="answer('everything')">
+                Everything ❤️
+            </button>
+
+        </div>
+
+        <div
+            class="answer"
+            id="answerText">
+        </div>
 
     </div>
 
-  </section>
+</section>
 
 
-  <!-- FINAL SCREEN -->
+<!-- =========================
+     LAST REVEAL
+========================= -->
 
-  <section class="screen" id="screen6">
-
-    <div class="glow one"></div>
-    <div class="glow two"></div>
+<section class="screen" id="lastScreen">
 
     <div class="content">
 
-      <div class="final-heart">
-        ❤️
-      </div>
+        <div class="eyebrow">
+            One last thing...
+        </div>
 
-      <div class="small-text">
-        17 August 2026
-      </div>
+        <h2>
+            You've come this far.
+        </h2>
 
-      <h1>
-        Happy Birthday
-        <span class="accent">My Love</span>
-      </h1>
+        <p class="description">
+            So maybe it's time I tell you
+            what all these memories were really about.
+        </p>
 
-      <p>
-        12 years.
-        Countless memories.
-        Thousands of conversations.
-        And still...
-        I wouldn't choose anyone else.
-      </p>
-
-      <p style="margin-top:25px;">
-        This little surprise is just a tiny way
-        of telling you how much you mean to me.
-      </p>
-
-      <div class="signature">
-        Here's to everything we've been,
-        everything we are,
-        and everything still waiting for us. ❤️
-      </div>
+        <button class="btn" onclick="showFinal()">
+            Open the final surprise ❤️
+        </button>
 
     </div>
 
-  </section>
+</section>
 
 
-  <script>
+<!-- =========================
+     FINAL
+========================= -->
 
-    let currentScreen = 1;
+<section class="screen" id="finalScreen">
 
-    function nextScreen() {
+    <div class="content">
 
-      const current = document.getElementById(
-        "screen" + currentScreen
-      );
+        <div class="final-heart">
+            ❤️
+        </div>
 
-      current.classList.remove("active");
+        <div class="eyebrow">
+            17 August 2026
+        </div>
 
-      currentScreen++;
+        <h1>
+            Happy Birthday<br>
+            <span class="accent">My Love</span>
+        </h1>
 
-      const next = document.getElementById(
-        "screen" + currentScreen
-      );
+        <div class="final-message">
 
-      if (next) {
-        next.classList.add("active");
-        window.scrollTo(0, 0);
-      }
+            12 years.
+
+            <br><br>
+
+            From a cute little girl...
+            to the woman who became such
+            an important part of my life.
+
+            <br><br>
+
+            We've grown, changed, laughed,
+            fought, made memories and somehow
+            kept choosing each other.
+
+            <br><br>
+
+            And if I could go back to 2014,
+            knowing everything that was going
+            to happen...
+
+            <br><br>
+
+            <strong>
+                I'd still choose you.
+            </strong>
+
+        </div>
+
+        <div class="signature">
+
+            Hum, tum... aur aapka birthday. ❤️
+
+            <br><br>
+
+            Here's to many more chapters.
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<script>
+
+/* =========================================
+   MEMORY DATA
+========================================= */
+
+const memories = [
+
+    {
+        file: "1.jpg",
+        year: "90s",
+        title: "Mumma's Girl",
+        message: "Ek cute si bachhi ❤️"
+    },
+
+    {
+        file: "2.jpg",
+        year: "2014",
+        title: "Teddy's Girl",
+        message: "My girl with her big teddy 🧸"
+    },
+
+    {
+        file: "4.jpg",
+        year: "2015",
+        title: "That Dress",
+        message: "Ek cute ladki, sundar si dress mein ❤️"
+    },
+
+    {
+        file: "8.jpg",
+        year: "2016",
+        title: "My Miss World",
+        message: "Bride to be ❤️"
+    },
+
+    {
+        file: "3.jpg",
+        year: "2017",
+        title: "My Girl",
+        message: "Hum mile ek duje ke liye Central Park mein ❤️"
+    },
+
+    {
+        file: "5.jpg",
+        year: "2017",
+        title: "Hauz Khas",
+        message: "Kuch khaas pal ❤️"
+    },
+
+    {
+        file: "6.jpg",
+        year: "2017",
+        title: "Hamari Bus Wali Trip",
+        message: "Garmi mein bhi khaas trip ❤️"
+    },
+
+    {
+        file: "7.jpg",
+        year: "2018",
+        title: "Dhampur Ki Vo Trips",
+        message: "Tarzen movie dekhne chale 🎬"
+    },
+
+    {
+        file: "9.jpg",
+        year: "2022",
+        title: "Maharani Sa",
+        message: "Mhari Maharani laagachee ❤️"
+    },
+
+    {
+        file: "10.jpg",
+        year: "2025",
+        title: "Doll",
+        message: "Jhoole wali ladki ❤️"
+    },
+
+    {
+        file: "11.jpg",
+        year: "2025",
+        title: "Birthday Girl",
+        message: "Smile please 😌❤️"
+    },
+
+    {
+        file: "12.jpg",
+        year: "2026",
+        title: "We",
+        message: "Hum, tum aur aapka birthday ❤️"
+    }
+
+];
+
+let currentMemory = 0;
+
+
+/* =========================================
+   SCREEN CONTROL
+========================================= */
+
+function hideAllScreens(){
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen => {
+            screen.classList.remove("active");
+        });
+
+}
+
+
+function showScreen(id){
+
+    hideAllScreens();
+
+    const screen =
+        document.getElementById(id);
+
+    screen.classList.add("active");
+
+}
+
+
+/* =========================================
+   START JOURNEY
+========================================= */
+
+function startJourney(){
+
+    showScreen("timelineScreen");
+
+}
+
+
+/* =========================================
+   SHOW MEMORY
+========================================= */
+
+function showMemory(index){
+
+    currentMemory = index;
+
+    const memory =
+        memories[currentMemory];
+
+    document.getElementById("memoryPhoto").src =
+        memory.file;
+
+    document.getElementById("memoryYear").textContent =
+        memory.year;
+
+    document.getElementById("memoryTitle").textContent =
+        memory.title;
+
+    document.getElementById("memoryMessage").textContent =
+        memory.message;
+
+    document.getElementById("memoryCount").textContent =
+        String(currentMemory + 1).padStart(2,"0")
+        + " / "
+        + memories.length;
+
+    const button =
+        document.getElementById("memoryButton");
+
+    if(currentMemory === memories.length - 1){
+
+        button.textContent =
+            "There's one more thing ❤️";
+
+    }else{
+
+        button.textContent =
+            "Next memory →";
 
     }
 
+    showScreen("memoryScreen");
 
-    function answer(type) {
+}
 
-      const answerText =
+
+/* =========================================
+   NEXT MEMORY
+========================================= */
+
+function nextMemory(){
+
+    if(currentMemory < memories.length - 1){
+
+        currentMemory++;
+
+        showMemory(currentMemory);
+
+    }else{
+
+        showScreen("questionScreen");
+
+    }
+
+}
+
+
+/* =========================================
+   QUESTION
+========================================= */
+
+function answer(type){
+
+    const answerText =
         document.getElementById("answerText");
 
-      if (type === "right") {
+    if(type === "smile"){
 
         answerText.innerHTML =
-          "Maybe... but honestly, I don't think one answer could ever explain it. ❤️";
+            "Definitely... but that's only one of the million reasons. ❤️";
 
-      } else {
+    }else{
 
         answerText.innerHTML =
-          "That's definitely one of them... but you haven't figured it out yet. 😌";
-
-      }
+            "Exactly. You finally got it. 😌❤️";
 
     }
 
-  </script>
+    setTimeout(() => {
+
+        document
+            .getElementById("questionScreen")
+            .querySelector(".question-buttons")
+            .style.display = "none";
+
+        setTimeout(() => {
+
+            showScreen("lastScreen");
+
+        },1200);
+
+    },1400);
+
+}
+
+
+/* =========================================
+   FINAL
+========================================= */
+
+function showFinal(){
+
+    showScreen("finalScreen");
+
+}
+
+
+/* =========================================
+   PREVENT ACCIDENTAL DRAG
+========================================= */
+
+document.addEventListener(
+    "dragstart",
+    function(e){
+        e.preventDefault();
+    }
+);
+
+</script>
 
 </body>
 </html>
