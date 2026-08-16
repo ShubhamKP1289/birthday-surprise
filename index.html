@@ -807,146 +807,6 @@ const memories = [
 
 let currentMemory = 0;
 /* =========================================
-   BACKGROUND MUSIC ENGINE
-========================================= */
-
-let audioContext;
-let musicStarted = false;
-let musicTimer;
-let musicGain;
-
-function startMusic() {
-
-    if (musicStarted) return;
-
-    musicStarted = true;
-
-    audioContext =
-        new (window.AudioContext || window.webkitAudioContext)();
-
-    musicGain = audioContext.createGain();
-    musicGain.gain.value = 0.045;
-
-    musicGain.connect(audioContext.destination);
-
-    playAmbientChord();
-
-    musicTimer = setInterval(() => {
-        playAmbientChord();
-    }, 6000);
-
-}
-
-
-/* Soft cinematic ambient chord */
-
-function playAmbientChord() {
-
-    if (!audioContext) return;
-
-    const notes = [261.63, 329.63, 392.00];
-
-    notes.forEach((frequency, index) => {
-
-        const oscillator =
-            audioContext.createOscillator();
-
-        const gain =
-            audioContext.createGain();
-
-        oscillator.type = "sine";
-
-        oscillator.frequency.value =
-            frequency;
-
-        gain.gain.setValueAtTime(
-            0,
-            audioContext.currentTime
-        );
-
-        gain.gain.linearRampToValueAtTime(
-            0.12,
-            audioContext.currentTime + 1
-        );
-
-        gain.gain.linearRampToValueAtTime(
-            0,
-            audioContext.currentTime + 5
-        );
-
-        oscillator.connect(gain);
-        gain.connect(musicGain);
-
-        oscillator.start();
-        oscillator.stop(
-            audioContext.currentTime + 5
-        );
-
-    });
-
-}
-
-
-/* =========================================
-   HAPPY BIRTHDAY TONE
-========================================= */
-
-function playBirthdayTone() {
-
-    if (!audioContext) return;
-
-    const notes = [
-        392.00,
-        392.00,
-        440.00,
-        392.00,
-        523.25,
-        493.88
-    ];
-
-    notes.forEach((frequency, index) => {
-
-        const oscillator =
-            audioContext.createOscillator();
-
-        const gain =
-            audioContext.createGain();
-
-        oscillator.type = "sine";
-
-        oscillator.frequency.value =
-            frequency;
-
-        const startTime =
-            audioContext.currentTime +
-            index * 0.35;
-
-        gain.gain.setValueAtTime(
-            0,
-            startTime
-        );
-
-        gain.gain.linearRampToValueAtTime(
-            0.18,
-            startTime + 0.05
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.001,
-            startTime + 0.3
-        );
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillator.start(startTime);
-        oscillator.stop(startTime + 0.35);
-
-    });
-
-}
-
-/* =========================================
    SCREEN CONTROL
 ========================================= */
 
@@ -978,8 +838,6 @@ function showScreen(id){
 ========================================= */
 
 function startJourney(){
-
-    startMusic();
 
     showScreen("timelineScreen");
 
@@ -1101,10 +959,6 @@ function answer(type){
 function showFinal(){
 
     showScreen("finalScreen");
-
-    setTimeout(() => {
-        playBirthdayTone();
-    }, 500);
 
 }
 
