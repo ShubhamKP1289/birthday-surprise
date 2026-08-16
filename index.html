@@ -421,7 +421,9 @@ h2{
 
 
 <body>
-
+<audio id="birthdayMusic" preload="auto">
+    <source src="happy-birthday.mp3" type="audio/mpeg">
+</audio>
 <div class="background">
     <div class="blur one"></div>
     <div class="blur two"></div>
@@ -840,6 +842,9 @@ function showScreen(id){
 ========================================= */
 
 function startJourney(){
+
+    document.getElementById("birthdayMusic").volume = 0.30;
+    document.getElementById("birthdayMusic").play();
 
     showScreen("timelineScreen");
 
