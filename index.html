@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For You ❤️</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      font-family: Georgia, "Times New Roman", serif;
+      background: #09060b;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .screen {
+      min-height: 100vh;
+      width: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen.active {
+      display: flex;
+      animation: fadeIn 1s ease;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 700px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .small-text {
+      font-size: 14px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      opacity: 0.65;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(42px, 10vw, 78px);
+      line-height: 1.05;
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+    h2 {
+      font-size: clamp(30px, 7vw, 52px);
+      font-weight: 400;
+      margin-bottom: 18px;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.8;
+      opacity: 0.85;
+    }
+
+    .accent {
+      color: #ff9eb5;
+    }
+
+    .btn {
+      margin-top: 35px;
+      border: 1px solid rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      padding: 15px 28px;
+      border-radius: 50px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.16);
+    }
+
+    /* Background glow */
+
+    .glow {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      background: rgba(255, 70, 120, 0.12);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .glow.one {
+      top: -120px;
+      left: -120px;
+    }
+
+    .glow.two {
+      bottom: -150px;
+      right: -120px;
+    }
+
+    /* Floating hearts */
+
+    .heart {
+      position: absolute;
+      opacity: 0.18;
+      animation: float 7s infinite ease-in-out;
+      font-size: 24px;
+    }
+
+    .heart:nth-child(1) {
+      left: 10%;
+      top: 20%;
+    }
+
+    .heart:nth-child(2) {
+      right: 12%;
+      top: 30%;
+      animation-delay: 2s;
+    }
+
+    .heart:nth-child(3) {
+      left: 20%;
+      bottom: 15%;
+      animation-delay: 4s;
+    }
+
+    .heart:nth-child(4) {
+      right: 20%;
+      bottom: 20%;
+      animation-delay: 1s;
+    }
+
+    /* Timeline */
+
+    .timeline {
+      margin-top: 35px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .year {
+      padding: 15px 5px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 15px;
+      background: rgba(255,255,255,0.04);
+      font-size: 14px;
+    }
+
+    .year.special {
+      border-color: rgba(255,158,181,0.6);
+      color: #ffb4c6;
+    }
+
+    /* Memory */
+
+    .memory-card {
+      margin: 30px auto 0;
+      max-width: 450px;
+      min-height: 230px;
+      border-radius: 25px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: linear-gradient(
+        145deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.025)
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      backdrop-filter: blur(12px);
+    }
+
+    .photo-placeholder {
+      width: 100%;
+      min-height: 170px;
+      border: 1px dashed rgba(255,255,255,0.25);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0.7;
+    }
+
+    .photo-placeholder span {
+      font-size: 42px;
+    }
+
+    /* Final */
+
+    .final-heart {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: heartbeat 1.5s infinite;
+    }
+
+    .signature {
+      margin-top: 35px;
+      font-size: 20px;
+      font-style: italic;
+      color: #ffb4c6;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-30px) rotate(10deg);
+      }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.15);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .timeline {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      p {
+        font-size: 16px;
+      }
+
+      .btn {
+        width: 85%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SCREEN 1 -->
+
+  <section class="screen active" id="screen1">
+
+    <div class="glow one"></div>
+    <div class="glow two"></div>
+
+    <div class="heart">♥</div>
+    <div class="heart">♡</div>
+    <div class="heart">♥</div>
+    <div class="heart">♡</div>
+
+    <div class="content">
+
+      <div class="small-text">
+        17 August
+      </div>
+
+      <h1>
+        This isn't<br>
+        <span class="accent">just a birthday wish.</span>
+      </h1>
+
+      <p>
+        I made something for you...
+        but you'll have to discover it yourself.
+      </p>
+
+      <button class="btn" onclick="nextScreen()">
+        Begin our story ❤️
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- SCREEN 2 -->
+
+  <section class="screen" id="screen2">
+
+    <div class="glow one"></div>
+    <div class="content">
+
+      <div class="small-text">
+        2014 — 2026
+      </div>
+
+      <h2>
+        Twelve years of <span class="accent">us.</span>
+      </h2>
+
+      <p>
+        Somehow, a simple beginning in 2014
+        became one of the most beautiful chapters
+        of my life.
+      </p>
+
+      <div class="timeline">
+
+        <div class="year special">2014 ❤️</div>
+        <div class="year">2015</div>
+        <div class="year">2016</div>
+        <div class="year">2017</div>
+
+        <div class="year">2018</div>
+        <div class="year">2019</div>
+        <div class="year">2020</div>
+        <div class="year">2021</div>
+
+        <div class="year">2022</div>
+        <div class="year">2023</div>
+        <div class="year">2024</div>
+        <div class="year special">2026 ❤️</div>
+
+      </div>
+
+      <button class="btn" onclick="nextScreen()">
+        Keep going →
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- SCREEN 3 -->
+
+  <section class="screen" id="screen3">
+
+    <div class="glow two"></div>
+
+    <div class="content">
+
+      <div class="small-text">
+        Memory 01
+      </div>
+
+      <h2>
+        Every story has a beginning...
+      </h2>
+
+      <div class="memory-card">
+
+        <div class="photo-placeholder">
+          <span>📸</span>
+          <div>Your first memory/photo goes here</div>
+        </div>
+
+      </div>
+
+      <p style="margin-top:20px;">
+        One day we'll replace this with a memory
+        that belongs only to us.
+      </p>
+
+      <button class="btn" onclick="nextScreen()">
+        One more memory →
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- SCREEN 4 -->
+
+  <section class="screen" id="screen4">
+
+    <div class="content">
+
+      <div class="small-text">
+        Almost there...
+      </div>
+
+      <h2>
+        Do you know what my favourite thing about you is?
+      </h2>
+
+      <p>
+        Maybe you'll figure it out.
+      </p>
+
+      <button class="btn" onclick="answer('wrong')">
+        Your smile 😌
+      </button>
+
+      <button class="btn" onclick="answer('right')">
+        Everything? ❤️
+      </button>
+
+      <p id="answerText" style="margin-top:25px;"></p>
+
+    </div>
+
+  </section>
+
+
+  <!-- SCREEN 5 -->
+
+  <section class="screen" id="screen5">
+
+    <div class="glow one"></div>
+
+    <div class="content">
+
+      <div class="small-text">
+        One last thing
+      </div>
+
+      <h2>
+        Ready for the final surprise?
+      </h2>
+
+      <p>
+        You've made it this far...
+        so I think you deserve to see it.
+      </p>
+
+      <button class="btn" onclick="nextScreen()">
+        Open it ❤️
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- FINAL SCREEN -->
+
+  <section class="screen" id="screen6">
+
+    <div class="glow one"></div>
+    <div class="glow two"></div>
+
+    <div class="content">
+
+      <div class="final-heart">
+        ❤️
+      </div>
+
+      <div class="small-text">
+        17 August 2026
+      </div>
+
+      <h1>
+        Happy Birthday
+        <span class="accent">My Love</span>
+      </h1>
+
+      <p>
+        12 years.
+        Countless memories.
+        Thousands of conversations.
+        And still...
+        I wouldn't choose anyone else.
+      </p>
+
+      <p style="margin-top:25px;">
+        This little surprise is just a tiny way
+        of telling you how much you mean to me.
+      </p>
+
+      <div class="signature">
+        Here's to everything we've been,
+        everything we are,
+        and everything still waiting for us. ❤️
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <script>
+
+    let currentScreen = 1;
+
+    function nextScreen() {
+
+      const current = document.getElementById(
+        "screen" + currentScreen
+      );
+
+      current.classList.remove("active");
+
+      currentScreen++;
+
+      const next = document.getElementById(
+        "screen" + currentScreen
+      );
+
+      if (next) {
+        next.classList.add("active");
+        window.scrollTo(0, 0);
+      }
+
+    }
+
+
+    function answer(type) {
+
+      const answerText =
+        document.getElementById("answerText");
+
+      if (type === "right") {
+
+        answerText.innerHTML =
+          "Maybe... but honestly, I don't think one answer could ever explain it. ❤️";
+
+      } else {
+
+        answerText.innerHTML =
+          "That's definitely one of them... but you haven't figured it out yet. 😌";
+
+      }
+
+    }
+
+  </script>
+
+</body>
+</html>
